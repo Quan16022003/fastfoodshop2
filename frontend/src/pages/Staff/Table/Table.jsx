@@ -19,7 +19,7 @@ const TableManagement = () => {
     const [newTable, setNewTable] = useState({
         tableNumber: '',
         seatingCapacity: 1,
-        location: 'trong nhà',
+        location: 'Tầng 1 trong nhà',
         isAvailable: true
     });
     const [showViewModal, setShowViewModal] = useState(false);
@@ -136,7 +136,7 @@ const TableManagement = () => {
             setNewTable({
                 tableNumber: '',
                 seatingCapacity: '',
-                location: 'trong nhà',
+                location: 'Tầng 1 trong nhà',
                 isAvailable: true
             });
             fetchTables();
@@ -457,10 +457,10 @@ const TableManagement = () => {
                                     })}
                                     required
                                 >
-                                    <option value="trong nhà">Trong nhà</option>
-                                    <option value="ngoài trời">Ngoài trời</option>
-                                    <option value="tầng 1">Tầng 1</option>
-                                    <option value="tầng 2">Tầng 2</option>
+                                    <option value="Tầng 1 trong nhà">Tầng 1 trong nhà</option>
+                                    <option value="Tầng 2 trong nhà">Tầng 2 trong nhà</option>
+                                    <option value="Tầng 1 ngoài trời">Tầng 1 ngoài trời</option>
+                                    <option value="Tầng 2 ngoài trời">Tầng 2 ngoài trời</option>
                                 </Form.Select>
                             </Form.Group>
                             <Form.Group className="mb-3">

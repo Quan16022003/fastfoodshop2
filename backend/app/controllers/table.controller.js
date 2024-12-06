@@ -35,8 +35,8 @@ exports.addTable = async (req, res) => {
         return res.status(400).json({ message: 'Sức chứa phải lớn hơn 0.' });
     }
     const newTable = new Table({ tableNumber, seatingCapacity, location });
+    console.log(tableNumber, seatingCapacity, location);
     await newTable.save();
-    
     // Tạo URL cho menu với tên bàn
     const menuUrl = `${process.env.FRONTEND_URL}/menu?table=${tableNumber}`;
 
@@ -62,6 +62,7 @@ exports.updateTable = async (req, res) => {
   try {
     const { id } = req.params;
     const updatedData = req.body;
+    console.log(updatedData);
     const updatedTable = await Table.findByIdAndUpdate(id, updatedData, { new: true });
     if (!updatedTable) {
       return res.status(404).json({ message: 'Bàn không tồn tại.' });

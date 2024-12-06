@@ -2,7 +2,7 @@ module.exports = mongoose => {
     var schema = mongoose.Schema(
       {
         tableNumber: {
-            type: String,
+            type: Number,
             required: true,
             unique: true,
         },
@@ -17,7 +17,7 @@ module.exports = mongoose => {
         },
         location: { 
             type: String,
-            enum: ['trong nhà', 'ngoài trời', 'tầng 1', 'tầng 2'],
+            enum: ['Tầng 1 trong nhà', 'Tầng 2 trong nhà', 'Tầng 1 ngoài trời', 'Tầng 2 ngoài trời'],
             required: true 
         }
       }
