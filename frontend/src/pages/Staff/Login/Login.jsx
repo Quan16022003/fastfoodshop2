@@ -80,7 +80,6 @@ function Login(props) {
             <Col xs={8}>
                 <div className="login__main">
                     <h4 className="login-title">Đăng nhập</h4>
-                    <span>Nhập thông tin chi tiết bên dưới</span>
                     
                     <form className="login__form" action="post" onSubmit={handleSubmitLogin}>
                         <input

@@ -35,10 +35,13 @@ function Register(props) {
                 body: JSON.stringify(formData),
             });
 
+            const data = await response.json();
+
             if (response.ok) {
-                navigate('/login');
-            }else{
-                toast.error('Đăng ký thất bại. Vui lòng kiểm tra lại thông tin');
+                toast.success('Đăng ký thành công!');
+                setTimeout(() => navigate('/login'), 2000);
+            } else {
+                toast.error(data.message);
             }
         } else {
             toast.error('Mật khẩu phải ít nhất là 6 ký tự');

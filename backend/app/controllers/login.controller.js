@@ -8,25 +8,25 @@ const Admin = db.admin;
 
 exports.login = async (req, res) => {
     if (!req.body.email || !req.body.password || !req.body.page) {
-        return res.status(400).send({ message: "Content can not be empty!" });
+        return res.status(400).send({ message: "Nội dung không thể trống!" });
     }
 
     if (req.body.page === 'user') {
         try {
-            // Find account
+            // Tìm tài khoản
             const data = await Customer.findOne({ email: req.body.email });
 
             if (!data) {
                 return res.status(401).send({
-                    message: `Customer not found with email ${req.body.email}.`
+                    message: `Không tìm thấy khách hàng với email ${req.body.email}.`
                 });
             }
 
-            // Check password
+            // Kiểm tra mật khẩu
             const isPasswordValid = bcrypt.compareSync(req.body.password, data.hash_password);
             if (!isPasswordValid) {
                 return res.status(401).send({
-                    message: `Incorrect password.`
+                    message: `Mật khẩu không chính xác.`
                 });
             }
 
@@ -50,7 +50,7 @@ exports.login = async (req, res) => {
             );
             if (!accessToken) {
                 return res.status(500).send({
-                    message: `Create token failed.`
+                    message: `Tạo token thất bại.`
                 });
             }
 
@@ -66,25 +66,25 @@ exports.login = async (req, res) => {
         } catch (error) {
             console.error(error);
             return res.status(500).send({
-                message: "An error occurred while processing your request."
+                message: "Đã xảy ra sự cố khi xử lý yêu cầu của bạn."
             });
         }
     } else {
         try {
-            // Find account
+            // Tìm tài khoản
             const data = await Admin.findOne({ email: req.body.email });
 
             if (!data) {
                 return res.status(401).send({
-                    message: `Admin not found with email ${req.body.email}.`
+                    message: `Không tìm thấy quản trị viên với email ${req.body.email}.`
                 });
             }
 
-            // Check password
+            // Kiểm tra mật khẩu
             const isPasswordValid = bcrypt.compareSync(req.body.password, data.hash_password);
             if (!isPasswordValid) {
                 return res.status(401).send({
-                    message: `Incorrect password.`
+                    message: `Mật khẩu không chính xác.`
                 });
             }
 
@@ -108,7 +108,7 @@ exports.login = async (req, res) => {
             );
             if (!accessToken) {
                 return res.status(500).send({
-                    message: `Create token failed.`
+                    message: `Tạo token thất bại.`
                 });
             }
 
@@ -124,7 +124,7 @@ exports.login = async (req, res) => {
         } catch (error) {
             console.error(error);
             return res.status(500).send({
-                message: "An error occurred while processing your request."
+                message: "Đã xảy ra sự cố khi xử lý yêu cầu của bạn."
             });
         }
     }
@@ -132,31 +132,31 @@ exports.login = async (req, res) => {
 
 exports.register = async (req, res) => {
     try {
-        // Check if request body is empty
+        // Kiểm tra nếu yêu cầu body rỗng
         if (!req.body) {
-            return res.status(400).send({ message: "Content can not be empty!" });
+            return res.status(400).send({ message: "Nội dung không thể trống!" });
         }
 
-        // Find account by email
+        // Tìm tài khoản bằng email
         const customer = await Customer.findOne({ email: req.body.email });
 
         if (customer) {
             return res.status(401).send({
-                message: `Customer already exists with email ${req.body.email}.`,
+                message: `Khách hàng đã tồn tại với email ${req.body.email}.`,
             });
         }
 
-        // Check password confirmation
+        // Kiểm tra xác nhận mật khẩu
         if (req.body.password !== req.body.confirm_password) {
             return res.status(400).send({
-                message: "Password confirmation does not match!",
+                message: "Xác nhận mật khẩu không khớp!",
             });
         }
 
-        // Hash password
+        // Mã hóa mật khẩu
         const hashPassword = bcrypt.hashSync(req.body.password, SALT_ROUNDS);
 
-        // Create a new customer
+        // Tạo khách hàng mới
         const newCustomer = new Customer({
             email: req.body.email,
             hash_password: hashPassword,
@@ -166,14 +166,14 @@ exports.register = async (req, res) => {
             gender: req.body.gender,
         });
 
-        // Save the new customer to the database
+        // Lưu khách hàng mới vào cơ sở dữ liệu
         const savedCustomer = await newCustomer.save();
 
         res.send(savedCustomer);
     } catch (error) {
         console.error(error);
         return res.status(500).send({
-            message: "An error occurred while processing your request.",
+            message: "Đã xảy ra sự cố khi xử lý yêu cầu của bạn.",
         });
     }
 };
@@ -181,20 +181,20 @@ exports.register = async (req, res) => {
 exports.refreshToken = async (req, res) => {
     try {
         if (!req.body.page) {
-            return res.status(400).send({ message: "Content can not be empty!" });
+            return res.status(400).send({ message: "Nội dung không thể trống!" });
         }
 
-        // Get refresh token from body
+        // Lấy refresh token từ body
         const refreshTokenFromBody = req.body.refreshToken;
         if (!refreshTokenFromBody) {
-            return res.status(400).send('Refresh token not found.');
+            return res.status(400).send('Không tìm thấy refresh token.');
         }
 
         const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET || jwtVariable.refreshTokenSecret;
 
         const decodedRefresh = await authMethod.decodeToken(refreshTokenFromBody, refreshTokenSecret);
         if (!decodedRefresh) {
-            return res.status(400).send('Invalid refresh token.');
+            return res.status(400).send('Refresh token không hợp lệ.');
         }
 
         const email = decodedRefresh.payload.email;
@@ -204,14 +204,14 @@ exports.refreshToken = async (req, res) => {
             customer = await Customer.findOne({ email });
             if (!customer) {
                 return res.status(401).send({
-                    message: `Customer not found with email ${email}.`,
+                    message: `Khách hàng không tìm thấy với email ${email}.`,
                 });
             }
         } else {
             admin = await Admin.findOne({ email });
             if (!admin) {
                 return res.status(401).send({
-                    message: `Admin not found with email ${email}.`,
+                    message: `Quản trị viên không tìm thấy với email ${email}.`,
                 });
             }
         }
@@ -221,7 +221,7 @@ exports.refreshToken = async (req, res) => {
 
         var dataForAccessToken;
         if (customer) {
-            // Create new access token
+            // Tạo token truy cập mới
             dataForAccessToken = {
                 id: customer.id,
                 email: customer.email,
@@ -248,7 +248,7 @@ exports.refreshToken = async (req, res) => {
 
         const accessToken = await authMethod.generateToken(dataForAccessToken, accessTokenSecret, accessTokenLife);
         if (!accessToken) {
-            return res.status(400).send('Failed to create access token, please try again.');
+            return res.status(400).send('Tạo token truy cập thất bại, vui lòng thử lại.');
         }
 
         return res.json({
@@ -257,38 +257,38 @@ exports.refreshToken = async (req, res) => {
     } catch (error) {
         console.error(error);
         return res.status(500).send({
-            message: 'An error occurred while processing your request.',
+            message: 'Đã xảy ra sự cố khi xử lý yêu cầu của bạn.',
         });
     }
 };
 
 exports.createAdmin = async (req, res) => {
     try {
-        // Check if request body is empty
+        // Kiểm tra nếu yêu cầu body rỗng
         if (!req.body) {
-            return res.status(400).send({ message: "Content can not be empty!" });
+            return res.status(400).send({ message: "Nội dung không thể trống!" });
         }
 
-        // Find account by email
+        // Tìm tài khoản bằng email
         const admin = await Admin.findOne({ email: req.body.email });
 
         if (admin) {
             return res.status(401).send({
-                message: `Admin already exists with email ${req.body.email}.`,
+                message: `Quản trị viên đã tồn tại với email ${req.body.email}.`,
             });
         }
 
-        // Check password confirmation
+        // Kiểm tra xác nhận mật khẩu
         if (req.body.password !== req.body.confirm_password) {
             return res.status(400).send({
-                message: "Password confirmation does not match!",
+                message: "Xác nhận mật khẩu không khớp!",
             });
         }
 
-        // Hash password
+        // Mã hóa mật khẩu
         const hashPassword = bcrypt.hashSync(req.body.password, SALT_ROUNDS);
 
-        // Admin a new customer
+        // Tạo quản trị viên mới
         const newAdmin = new Admin({
             email: req.body.email,
             hash_password: hashPassword,
@@ -299,14 +299,14 @@ exports.createAdmin = async (req, res) => {
             role: req.body.role
         });
 
-        // Save the new customer to the database
+        // Lưu quản trị viên mới vào cơ sở dữ liệu
         const savedAdmin = await newAdmin.save();
 
         res.send(savedAdmin);
     } catch (error) {
         console.error(error);
         return res.status(500).send({
-            message: "An error occurred while processing your request.",
+            message: "Đã xảy ra sự cố khi xử lý yêu cầu của bạn.",
         });
     }
 };

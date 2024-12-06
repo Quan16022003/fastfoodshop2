@@ -133,12 +133,13 @@
 
 @media (min-width: 768px) {
     .block-register {
-        margin: 60px auto;
-        padding: 40px;
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 30px;
 
         h2 {
-            font-size: 48px;
-            line-height: 56px;
+            font-size: 42px;
+            line-height: 50px;
         }
 
         span {
@@ -147,12 +148,13 @@
         }
 
         .register-form {
-            margin: 40px auto;
+            margin: 30px auto;
+            max-width: 600px;
 
             .form-group {
                 &.name-group {
                     flex-direction: row;
-                    gap: 30px;
+                    gap: 20px;
                     
                     .register-form-input {
                         flex: 1;
