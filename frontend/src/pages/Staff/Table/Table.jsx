@@ -29,6 +29,7 @@ const TableManagement = () => {
     const socketRef = useRef();
     const user = JSON.parse(sessionStorage.getItem("user"));
     const SOCKET_SERVER_URL = 'http://localhost:3000';
+    const CLIENT_URL = window.location.origin;
 
     useEffect(() => {
         socketRef.current = socketIOClient.connect(SOCKET_SERVER_URL);
@@ -305,10 +306,10 @@ const TableManagement = () => {
                                 })}
                                 required
                             >
-                                <option value="trong nhà">Trong nhà</option>
-                                <option value="ngoài trời">Ngoài trời</option>
-                                <option value="tầng 1">Tầng 1</option>
-                                <option value="tầng 2">Tầng 2</option>
+                                <option value="Tầng 1 trong nhà">Tầng 1 trong nhà</option>
+                                <option value="Tầng 2 trong nhà">Tầng 2 trong nhà</option>
+                                <option value="Tầng 1 ngoài trời">Tầng 1 ngoài trời</option>
+                                <option value="Tầng 2 ngoài trời">Tầng 2 ngoài trời</option>
                             </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -518,10 +519,7 @@ const TableManagement = () => {
                                 <h5>Mã QR</h5>
                                 <div className="d-flex justify-content-center">
                                     <QRCodeSVG
-                                        value={JSON.stringify({
-                                            tableId: viewTable._id,
-                                            tableNumber: viewTable.tableNumber
-                                        })}
+                                        value={`${CLIENT_URL}/menu?table=${viewTable.tableNumber}`}
                                         size={200}
                                         level="H"
                                     />

@@ -37,15 +37,11 @@ exports.addTable = async (req, res) => {
     const newTable = new Table({ tableNumber, seatingCapacity, location });
     await newTable.save();
     
-    // Tạo dữ liệu để mã hóa vào QR
-    const qrData = {
-      tableId: newTable._id,
-      tableNumber: newTable.tableNumber,
-      location: newTable.location
-    };
+    // Tạo URL cho menu với tên bàn
+    const menuUrl = `${process.env.FRONTEND_URL}/menu?table=${tableNumber}`;
 
-    // Tạo mã QR dạng URL data
-    const qrCodeDataURL = await QRCode.toDataURL(JSON.stringify(qrData));
+    // Tạo mã QR từ URL menu
+    const qrCodeDataURL = await QRCode.toDataURL(menuUrl);
 
     // Cập nhật mã QR vào bảng
     newTable.qrCode = qrCodeDataURL;
